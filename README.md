@@ -1,66 +1,14 @@
-## Foundry
+# IBT - final project
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+## Setup
 
-Foundry consists of:
-
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
-
-## Documentation
-
-https://book.getfoundry.sh/
-
-## Usage
-
-### Build
-
-```shell
-$ forge build
-```
-
-### Test
-
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+1. Install foundry (only using anvil and forge)
+2. Run `anvil` in terminal - this is the Ethereum-based local testnet.
+3. Compile the Solidity contract with the following command: `forge build`
+4. Create a MetaMask account and add their browser extension.
+5. Create a new MetaMask project, and put the API key in the .env file.
+6. Link MetaMask with the local testnet, by creating a custom network.
+7. Within the MetaMask extension, fill out the needed fields. The RPC url is whatever Anvil is listening on, and the chain ID should by default be `31337`.
+8. MetaMask might suggest to use a token symbol and network name due to security
+   concerns: follow the suggestion.
+9. Run `npm install` then `npm run dev`.
