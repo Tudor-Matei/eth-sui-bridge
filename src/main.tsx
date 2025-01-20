@@ -13,7 +13,7 @@ root.render(
           name: "Skibidi toilet rizz fanum tax",
           url: window.location.href,
         },
-        infuraAPIKey: process.env.INFURA_API_KEY,
+        infuraAPIKey: import.meta.env.INFURA_API_KEY,
       }}
     >
       <App />
