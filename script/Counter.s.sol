@@ -13,7 +13,6 @@ contract CounterScript is Script {
         vm.startBroadcast();
 
         counter = new Counter();
-
         vm.stopBroadcast();
     }
 }
