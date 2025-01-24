@@ -6,7 +6,6 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 
 // Config options for the networks you want to connect to
-console.log(getFullnodeUrl("localnet"));
 const { networkConfig } = createNetworkConfig({
   localnet: { url: getFullnodeUrl("localnet") },
 });
