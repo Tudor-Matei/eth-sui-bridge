@@ -1,10 +1,12 @@
 import { ethers } from "ethers";
+import CounterArtifact from "../../out/Counter.sol/Counter.json";
 
-export default async function deployContract(artifactAbi: ethers.InterfaceAbi, artifactBytecode: ethers.BytesLike) {
+export async function deploySolidityContract() {
   try {
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
-    const MyContractFactory = new ethers.ContractFactory(artifactAbi, artifactBytecode, signer);
+
+    const MyContractFactory = new ethers.ContractFactory(CounterArtifact.abi, CounterArtifact.bytecode, signer);
 
     const network = await provider.getNetwork();
     console.log(network.chainId);
