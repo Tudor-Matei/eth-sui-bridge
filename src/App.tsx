@@ -1,5 +1,10 @@
+import { ConnectButton, useAccounts, useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
+import "@mysten/dapp-kit/dist/index.css";
+import { Transaction } from "@mysten/sui/transactions";
 import { ethers } from "ethers";
 import { useState } from "react";
+import CounterArtifactSui from "../script/Counter/Counter.json";
+import { deploySolidityContract } from "./helpers/deployContract";
 
 declare global {
   interface Window {
@@ -33,11 +38,77 @@ const App = () => {
     }
   };
 
+  const suiClient = useSuiClient();
+  const { mutate: signAndExecute } = useSignAndExecuteTransaction();
+  const accounts = useAccounts();
+
+  const create = async () => {
+    const tx = new Transaction();
+
+    tx.moveCall({
+      arguments: [],
+      target: `${import.meta.env.VITE_DEPLOYED_SUI_CONTRACT}::counter::create`,
+    });
+
+    signAndExecute(
+      {
+        transaction: tx,
+      },
+      {
+        onSuccess: async ({ digest }) => {
+          const { effects } = await suiClient.waitForTransaction({
+            digest: digest,
+            options: {
+              showEffects: true,
+            },
+          });
+
+          console.log(effects);
+        },
+      }
+    );
+  };
+
+  const deploySuiContract = async () => {
+    const tx = new Transaction();
+
+    const cap = tx.publish({
+      modules: CounterArtifactSui.modules,
+      dependencies: CounterArtifactSui.dependencies,
+    });
+
+    tx.setGasBudget(100000000);
+    tx.transferObjects([cap], tx.pure.address(accounts[0].address));
+
+    signAndExecute(
+      {
+        transaction: tx,
+      },
+      {
+        onSuccess: async ({ digest }) => {
+          const response = await suiClient.waitForTransaction({
+            digest: digest,
+            options: {
+              showEffects: true,
+              showObjectChanges: true,
+            },
+          });
+
+          console.log(response);
+        },
+      }
+    );
+  };
+
   return (
     <div className="App">
+      <ConnectButton connectText="Connect with Sui" />
       <button style={{ padding: 10, margin: 10 }} onClick={connect}>
         Connect with MetaMask
       </button>
+      <button onClick={deploySolidityContract}>Deploy Solidity contract</button>
+      <button onClick={deploySuiContract}>Deploy Sui contract</button>
+      <button onClick={create}>Call Sui contract</button>
       {error && <h3 style={{ color: "red" }}>{error}</h3>}
       {metamaskConnected && (
         <div>

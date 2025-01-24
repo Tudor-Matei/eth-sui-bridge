@@ -11,4 +11,9 @@
 7. Within the MetaMask extension, fill out the needed fields. The RPC url is whatever Anvil is listening on, and the chain ID should by default be `31337`.
 8. MetaMask might suggest to use a token symbol and network name due to security
    concerns: follow the suggestion.
-9. Run `npm install` then `npm run dev`.
+9. Write `sui start --with-faucet` to start the Sui local blockchain
+10. Install the Sui Wallet extension (only available in Chrome)
+11. Make it use the localnet
+12. To build a Sui contract you run `sui move build --dump-bytecode-as-base64`
+13. To deploy the Sui contract on the blockchain you run `sui client publish .`. Make sure you are in the same directory as the auto-generated `Move.toml` file.
+14. Run `npm install` then `npm run dev`.

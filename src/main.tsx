@@ -1,22 +1,27 @@
-import { MetaMaskProvider } from "@metamask/sdk-react";
+import { createNetworkConfig, SuiClientProvider, WalletProvider } from "@mysten/dapp-kit";
+import { getFullnodeUrl } from "@mysten/sui/client";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
+
+// Config options for the networks you want to connect to
+console.log(getFullnodeUrl("localnet"));
+const { networkConfig } = createNetworkConfig({
+  localnet: { url: getFullnodeUrl("localnet") },
+});
+const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 
 root.render(
   <React.StrictMode>
-    <MetaMaskProvider
-      sdkOptions={{
-        dappMetadata: {
-          name: "Skibidi toilet rizz fanum tax",
-          url: window.location.href,
-        },
-        infuraAPIKey: import.meta.env.INFURA_API_KEY,
-      }}
-    >
-      <App />
-    </MetaMaskProvider>
+    <QueryClientProvider client={queryClient}>
+      <SuiClientProvider networks={networkConfig} defaultNetwork="localnet">
+        <WalletProvider>
+          <App />
+        </WalletProvider>
+      </SuiClientProvider>
+    </QueryClientProvider>
   </React.StrictMode>
 );
