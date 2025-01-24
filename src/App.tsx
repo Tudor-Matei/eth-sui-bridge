@@ -1,10 +1,11 @@
-import { ConnectButton, useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
+import { ConnectButton, useAccounts, useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
 import "@mysten/dapp-kit/dist/index.css";
 import { Transaction } from "@mysten/sui/transactions";
 import { burnEthereumIBT } from "./helpers/burn";
 import useConnectEthereum from "./helpers/connectEthereum";
 import { mintEthereumIBT } from "./helpers/mint";
 import { sendEth } from "./helpers/sendEth";
+import "./index.css";
 
 declare global {
   interface Window {
@@ -17,14 +18,18 @@ const App = () => {
 
   const suiClient = useSuiClient();
   const { mutate: signAndExecute } = useSignAndExecuteTransaction();
-  // const accounts = useAccounts();
+  const accounts = useAccounts();
 
-  const create = async () => {
+  const mintTokensOnSui = async () => {
     const tx = new Transaction();
 
     tx.moveCall({
-      arguments: [],
-      target: `${import.meta.env.VITE_DEPLOYED_SUI_CONTRACT}::counter::create`,
+      arguments: [
+        tx.pure.address(import.meta.env.VITE_SUI_IBT_TREASURY_CAP),
+        tx.pure.u64(1000),
+        tx.pure.address(accounts[0].address),
+      ],
+      target: `${import.meta.env.VITE_SUI_IBT_CONTRACT}::token::mint`,
     });
 
     signAndExecute(
@@ -77,7 +82,7 @@ const App = () => {
 
       <div>
         <ConnectButton connectText="Connect with Sui" />
-        <button onClick={mintEthereumIBT}>Mint IBT tokens on Sui</button>
+        <button onClick={mintTokensOnSui}>Mint IBT tokens on Sui</button>
         <button onClick={burnEthereumIBT}>Burn IBT tokens on Sui</button>
       </div>
 
