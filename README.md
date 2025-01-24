@@ -14,6 +14,15 @@
 9. Write `sui start --with-faucet` to start the Sui local blockchain
 10. Install the Sui Wallet extension (only available in Chrome)
 11. Make it use the localnet
-12. To build a Sui contract you run `sui move build --dump-bytecode-as-base64`
+12. To build a Sui contract you run `sui move build --dump-bytecode-as-base64 > Token.json --skip-fetch-latest-git-deps` while navigating inside script/sui/Token
 13. To deploy the Sui contract on the blockchain you run `sui client publish .`. Make sure you are in the same directory as the auto-generated `Move.toml` file.
 14. Run `npm install` then `npm run dev`.
+
+## Possible errors
+
+In the case you get a weird error related to the signing of transactions with Sui when publishing a contract, follow these steps:
+
+- Delete Move.lock from the existing sui package
+- Run `sui genesis --force`
+- Run `sui start --with-faucet`
+- Run `sui client faucet`
