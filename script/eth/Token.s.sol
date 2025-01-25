@@ -4,7 +4,6 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 contract Token is ERC20 {
     address public owner;
 
-    // Define the events
     event MintEvent(address indexed to, uint256 amount);
     event BurnEvent(address indexed from, uint256 amount);
 
@@ -15,12 +14,12 @@ contract Token is ERC20 {
     function mint(uint256 amount) external {
         require(msg.sender == owner, "Only owner can mint");
         _mint(msg.sender, amount);
-        emit MintEvent(msg.sender, amount); // Emit the MintEvent
+        emit MintEvent(msg.sender, amount);
     }
 
     function burn(uint256 amount) external {
         require(msg.sender == owner, "Only owner can burn");
         _burn(msg.sender, amount);
-        emit BurnEvent(msg.sender, amount); // Emit the BurnEvent
+        emit BurnEvent(msg.sender, amount);
     }
 }
