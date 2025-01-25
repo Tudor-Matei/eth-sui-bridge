@@ -1,10 +1,10 @@
 module token::token;
 
-use sui::coin::{Self, TreasuryCap};
+use sui::coin::{Self, TreasuryCap, Coin};
 
-public struct IBT has drop {}
+public struct TOKEN has drop {}
 
-fun init(witness: IBT, ctx: &mut TxContext) {
+fun init(witness: TOKEN, ctx: &mut TxContext) {
 		let (treasury, metadata) = coin::create_currency(
 				witness,
 				6,
@@ -19,7 +19,7 @@ fun init(witness: IBT, ctx: &mut TxContext) {
 }
 
 public fun mint(
-		treasury_cap: &mut TreasuryCap<IBT>,
+		treasury_cap: &mut TreasuryCap<TOKEN>,
 		amount: u64,
 		recipient: address,
 		ctx: &mut TxContext,
@@ -27,3 +27,8 @@ public fun mint(
 		let coin = coin::mint(treasury_cap, amount, ctx);
 		transfer::public_transfer(coin, recipient)
 }
+
+public fun burn(treasury_cap: &mut TreasuryCap<TOKEN>, coin: Coin<TOKEN>) {
+    coin::burn(treasury_cap, coin);
+}
+
