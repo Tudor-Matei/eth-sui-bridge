@@ -17,8 +17,13 @@
 12. To build a Sui contract you run `sui move build --dump-bytecode-as-base64 > Token.json --skip-fetch-latest-git-deps` while navigating inside script/sui/Token
 13. To deploy the Sui contract on the blockchain you run `sui client publish .`. Make sure you are in the same directory as the auto-generated `Move.toml` file.
 14. Run `npm install` then `npm run dev`.
+15. For supporting minting on the Sui blockchain, navigate to src/server and type `node sui.js`.
 
 ## Possible errors
+
+When you close anvil and reopen it, you have to redeploy the IBT contract, get its
+address, then import a new token in the MetaMask wallet, by passing the address of the
+deployed contract. That way you should see the tokens in your wallet.
 
 In the case you get a weird error related to the signing of transactions with Sui when publishing a contract, follow these steps:
 
