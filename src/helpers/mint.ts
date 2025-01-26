@@ -1,7 +1,7 @@
 import { ethers, parseUnits } from "ethers";
 import TokenArtifact from "../../out/Token.s.sol/Token.json";
 
-export async function mintEthereumIBT() {
+export async function mintEthereumIBT(amount: string) {
   const provider = new ethers.BrowserProvider(window.ethereum);
   const signer = await provider.getSigner();
 
@@ -9,14 +9,14 @@ export async function mintEthereumIBT() {
   const contractABI = TokenArtifact.abi;
 
   const contract = new ethers.Contract(contractAddress, contractABI, signer);
-  await contract.mint(parseUnits("1000", 18));
+  await contract.mint(parseUnits(amount, 18));
 
   contract.on("MintEvent", (to, amount) => {
     alert(`Minted to ${to} amount ${amount}`);
   });
 }
 
-export async function mintSuiIBT(walletAddress: string) {
+export async function mintSuiIBT(amount: string, walletAddress: string): Promise<string> {
   const packageId = import.meta.env.VITE_SUI_IBT_CONTRACT;
   const treasuryCapId = import.meta.env.VITE_SUI_IBT_TREASURY_CAP;
 
@@ -28,7 +28,7 @@ export async function mintSuiIBT(walletAddress: string) {
       },
       body: JSON.stringify({
         packageId,
-        amount: 1000,
+        amount,
         treasuryCapId,
         walletAddress,
       }),
@@ -38,20 +38,15 @@ export async function mintSuiIBT(walletAddress: string) {
       throw new Error(`Error: ${response.statusText}`);
     }
 
-    const coinObject = await response.json();
-    if (!coinObject?.coinObjectID) {
-      alert("Error minting tokens. Invalid coin object id.");
-      return null;
+    const serverResponse: { error?: string; message?: string } = await response.json();
+    if (!serverResponse?.message) {
+      console.log(serverResponse.error || serverResponse);
+      throw new Error("There's been an error minting coins.");
     }
 
-    localStorage.setItem(
-      "coinIDS",
-      JSON.stringify([...JSON.parse(localStorage.getItem("coinIDS") || "[]"), coinObject.coinObjectID])
-    );
-    return true;
+    return serverResponse.message;
   } catch (error) {
     console.error("Error minting tokens:", error);
-    alert("Error minting tokens");
-    return null;
+    throw new Error("Error minting tokens");
   }
 }
