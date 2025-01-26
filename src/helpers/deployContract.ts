@@ -8,12 +8,11 @@ export async function deploySolidityContract(): Promise<string> {
 
     const MyContractFactory = new ethers.ContractFactory(TokenArtifact.abi, TokenArtifact.bytecode, signer);
 
-    console.log(new Date().toISOString(), "Deploying contract...");
     const contract = await MyContractFactory.deploy();
     await contract.waitForDeployment();
-    console.log(new Date().toISOString(), "Contract deployed.");
-    alert("Contract deployed.");
+    const contractAddress = await contract.getAddress();
 
+    prompt("Contract deployed. Its address:", contractAddress);
     return contract.getAddress() as Promise<string>;
   } catch (error) {
     return (error as Error).message;
