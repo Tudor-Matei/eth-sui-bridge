@@ -26,7 +26,7 @@ app.post("/mint", (req, res) => {
     "--package",
     packageId,
     "--module",
-    "token",
+    "ibt",
     "--function",
     "mint",
     "--args",
@@ -37,6 +37,7 @@ app.post("/mint", (req, res) => {
     "10000000",
   ];
 
+  console.log(args.join(" "));
   const child = spawn(command, args);
 
   let output = "";
@@ -57,12 +58,7 @@ app.post("/mint", (req, res) => {
     }
     console.log(`Command output: ${output}`);
 
-    res.json({
-      coinObjectID: output
-        .split("ObjectID")
-        .filter((t) => !t.includes("Object Changes"))[0]
-        .substring(2, 68),
-    });
+    res.json({ message: "Minted Sui tokens successfully." });
   });
 });
 
